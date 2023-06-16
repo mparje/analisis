@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import re
 from textblob import TextBlob
 
 # Cargar los datos de los registros de WhatsApp
@@ -9,8 +10,8 @@ def cargar_datos(archivo):
     datos = pd.read_csv(archivo, sep="]", header=None, names=["Mensaje"])
     # Eliminar el mensaje inicial de privacidad de WhatsApp
     datos = datos[1:]
-    # Dividir la columna "Mensaje" en "Fecha", "Hora" y "Contenido"
-    datos[['Fecha', 'Hora', 'Contenido']] = datos['Mensaje'].str.split(',', expand=True)
+    # Extraer fecha, hora y contenido del mensaje utilizando expresiones regulares
+    datos[['Fecha', 'Hora', 'Contenido']] = datos['Mensaje'].str.extract(r'\[(.+), (.+)\.(.+): (.+)')
     # Eliminar caracteres no deseados en la columna "Contenido"
     datos['Contenido'] = datos['Contenido'].str.replace(r"[^a-zA-Z0-9\s]+", "")
     return datos.drop(columns=['Mensaje'])
