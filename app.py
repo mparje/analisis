@@ -1,7 +1,5 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 import re
 from textblob import TextBlob
 
@@ -16,29 +14,20 @@ def cargar_datos(archivo):
     datos['Contenido'] = datos['Contenido'].str.replace(r"[^a-zA-Z0-9\s]+", "")
     return datos.drop(columns=['Mensaje'])
 
-# Analizar los datos y generar visualizaciones
-def analizar_sentimiento(datos):
-    # Convertir la columna "Contenido" a tipo cadena
-    datos['Contenido'] = datos['Contenido'].astype(str)
-    # Analizar el sentimiento de los mensajes
-    datos["Sentimiento"] = datos["Contenido"].apply(lambda x: TextBlob(x).sentiment.polarity)
-
-    # Graficar el sentimiento promedio
-    st.subheader("Sentimiento promedio de los mensajes")
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.barplot(x=datos.index, y=datos["Sentimiento"], ax=ax)
-    plt.xlabel("Mensaje")
-    plt.ylabel("Sentimiento")
-    plt.xticks(rotation=45)
-    st.pyplot(fig)
-
+# Analizar los datos y mostrar información
+def analizar_datos(datos):
     # Mostrar la cantidad total de mensajes
     st.write("La cantidad total de mensajes es:", len(datos))
+
+    # Calcular el sentimiento promedio
+    datos["Sentimiento"] = datos["Contenido"].apply(lambda x: TextBlob(x).sentiment.polarity)
+    sentimiento_promedio = datos["Sentimiento"].mean()
+    st.write("El sentimiento promedio de los mensajes es:", sentimiento_promedio)
 
 # Configuración de la aplicación
 def main():
     st.title("Análisis de sentimiento de registros de WhatsApp")
-    st.write("Esta aplicación analiza el sentimiento de los mensajes de WhatsApp y presenta los resultados en forma gráfica.")
+    st.write("Esta aplicación analiza el sentimiento de los mensajes de WhatsApp y muestra los resultados.")
 
     # Subir el archivo de registros de WhatsApp
     archivo = st.file_uploader("Sube el archivo de registros de WhatsApp (_chat.txt)", type="txt")
@@ -47,8 +36,8 @@ def main():
         # Cargar los datos
         datos = cargar_datos(archivo)
 
-        # Analizar el sentimiento de los mensajes
-        analizar_sentimiento(datos)
+        # Analizar los datos
+        analizar_datos(datos)
 
 # Ejecutar la aplicación
 if __name__ == "__main__":
