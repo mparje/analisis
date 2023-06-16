@@ -10,7 +10,7 @@ def cargar_datos(archivo):
     datos = pd.read_csv(archivo, sep="]", header=None, names=["Mensaje"])
     # Eliminar el mensaje inicial de privacidad de WhatsApp
     datos = datos[1:]
-    # Extraer fecha, hora y contenido del mensaje utilizando expresiones regulares
+    # Extraer fecha, hora, remitente y contenido del mensaje utilizando expresiones regulares
     datos[['Fecha', 'Hora', 'Remitente', 'Contenido']] = datos['Mensaje'].str.extract(r'\[(\d{1,2}/\d{1,2}/\d{2}), (\d{1,2}:\d{1,2}:\d{1,2} [a|p]\.m\.)\] (.+?): (.+)')
     # Eliminar caracteres no deseados en la columna "Contenido"
     datos['Contenido'] = datos['Contenido'].str.replace(r"[^a-zA-Z0-9\s]+", "")
@@ -18,6 +18,8 @@ def cargar_datos(archivo):
 
 # Analizar los datos y generar visualizaciones
 def analizar_sentimiento(datos):
+    # Convertir la columna "Contenido" a tipo cadena
+    datos['Contenido'] = datos['Contenido'].astype(str)
     # Analizar el sentimiento de los mensajes
     datos["Sentimiento"] = datos["Contenido"].apply(lambda x: TextBlob(x).sentiment.polarity)
 
