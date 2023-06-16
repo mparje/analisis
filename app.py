@@ -20,7 +20,7 @@ def analizar_datos(datos):
     st.write("La cantidad total de mensajes es:", len(datos))
 
     # Calcular el sentimiento promedio
-    datos["Sentimiento"] = datos["Contenido"].apply(lambda x: TextBlob(x).sentiment.polarity)
+    datos["Sentimiento"] = datos["Contenido"].apply(lambda x: TextBlob(x).sentiment.polarity if isinstance(x, str) else 0)
     sentimiento_promedio = datos["Sentimiento"].mean()
     st.write("El sentimiento promedio de los mensajes es:", sentimiento_promedio)
 
