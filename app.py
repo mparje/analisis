@@ -10,18 +10,7 @@ def cargar_datos(archivo):
     return datos
 
 # Analizar los datos y generar visualizaciones
-def analizar_datos(datos):
-    # Contar la cantidad de mensajes por usuario
-    conteo_mensajes = datos["Usuario"].value_counts()
-
-    # Graficar el conteo de mensajes por usuario
-    st.subheader("Conteo de mensajes por usuario")
-    plt.figure(figsize=(10, 6))
-    sns.barplot(x=conteo_mensajes.index, y=conteo_mensajes.values)
-    plt.xlabel("Usuario")
-    plt.ylabel("Cantidad de mensajes")
-    st.pyplot()
-
+def analizar_sentimiento(datos):
     # Analizar el sentimiento de los mensajes
     datos["Sentimiento"] = datos["Mensaje"].apply(lambda x: TextBlob(x).sentiment.polarity)
 
@@ -39,8 +28,8 @@ def analizar_datos(datos):
 
 # Configuración de la aplicación
 def main():
-    st.title("Análisis de registros de WhatsApp")
-    st.write("Esta aplicación analiza los registros de WhatsApp y presenta los resultados en forma gráfica.")
+    st.title("Análisis de sentimiento de registros de WhatsApp")
+    st.write("Esta aplicación analiza el sentimiento de los mensajes de WhatsApp y presenta los resultados en forma gráfica.")
 
     # Subir el archivo de registros de WhatsApp
     archivo = st.file_uploader("Sube el archivo de registros de WhatsApp (_chat.txt)", type="txt")
@@ -49,8 +38,8 @@ def main():
         # Cargar los datos
         datos = cargar_datos(archivo)
 
-        # Analizar los datos y generar visualizaciones
-        analizar_datos(datos)
+        # Analizar el sentimiento de los mensajes
+        analizar_sentimiento(datos)
 
 # Ejecutar la aplicación
 if __name__ == "__main__":
