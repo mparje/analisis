@@ -11,7 +11,7 @@ def cargar_datos(archivo):
     # Eliminar el mensaje inicial de privacidad de WhatsApp
     datos = datos[1:]
     # Extraer fecha, hora y contenido del mensaje utilizando expresiones regulares
-    datos[['Fecha', 'Hora', 'Contenido']] = datos['Mensaje'].str.extract(r'\[(.+), (.+)\.(.+): (.+)')
+    datos[['Fecha', 'Hora', 'Contenido']] = datos['Mensaje'].str.extract(r'\[(\d{1,2}/\d{1,2}/\d{2}), (\d{1,2}:\d{1,2}:\d{1,2} [a|p]\.m\.)\] (.+): (.+)')
     # Eliminar caracteres no deseados en la columna "Contenido"
     datos['Contenido'] = datos['Contenido'].str.replace(r"[^a-zA-Z0-9\s]+", "")
     return datos.drop(columns=['Mensaje'])
