@@ -11,6 +11,9 @@ def cargar_datos(archivo):
 
 # Analizar los datos y generar visualizaciones
 def analizar_sentimiento(datos):
+    # Filtrar y convertir los valores de la columna "Mensaje" a str
+    datos["Mensaje"] = datos["Mensaje"].astype(str)
+
     # Analizar el sentimiento de los mensajes
     datos["Sentimiento"] = datos["Mensaje"].apply(lambda x: TextBlob(x).sentiment.polarity)
 
