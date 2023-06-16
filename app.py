@@ -25,12 +25,12 @@ def analizar_sentimiento(datos):
 
     # Graficar el sentimiento promedio
     st.subheader("Sentimiento promedio de los mensajes")
-    plt.figure(figsize=(10, 6))
-    sns.barplot(x=datos.index, y=datos["Sentimiento"])
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.barplot(x=datos.index, y=datos["Sentimiento"], ax=ax)
     plt.xlabel("Mensaje")
     plt.ylabel("Sentimiento")
     plt.xticks(rotation=45)
-    st.pyplot()
+    st.pyplot(fig)
 
     # Mostrar la cantidad total de mensajes
     st.write("La cantidad total de mensajes es:", len(datos))
