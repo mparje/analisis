@@ -6,24 +6,27 @@ from textblob import TextBlob
 
 # Cargar los datos de los registros de WhatsApp
 def cargar_datos(archivo):
-    datos = pd.read_csv(archivo, sep="\t", header=None, names=["Fecha", "Hora", "Mensaje"])
-    return datos
+    datos = pd.read_csv(archivo, sep="]", header=None, names=["Mensaje"])
+    # Eliminar el mensaje inicial de privacidad de WhatsApp
+    datos = datos[1:]
+    # Dividir la columna "Mensaje" en "Fecha", "Hora" y "Contenido"
+    datos[['Fecha', 'Hora', 'Contenido']] = datos['Mensaje'].str.split(',', expand=True)
+    # Eliminar caracteres no deseados en la columna "Contenido"
+    datos['Contenido'] = datos['Contenido'].str.replace(r"[^a-zA-Z0-9\s]+", "")
+    return datos.drop(columns=['Mensaje'])
 
 # Analizar los datos y generar visualizaciones
 def analizar_sentimiento(datos):
-    # Filtrar y convertir los valores de la columna "Mensaje" a str
-    datos["Mensaje"] = datos["Mensaje"].astype(str)
-
     # Analizar el sentimiento de los mensajes
-    datos["Sentimiento"] = datos["Mensaje"].apply(lambda x: TextBlob(x).sentiment.polarity)
+    datos["Sentimiento"] = datos["Contenido"].apply(lambda x: TextBlob(x).sentiment.polarity)
 
-    # Graficar el sentimiento promedio por usuario
-    st.subheader("Sentimiento promedio por usuario")
-    sentimiento_promedio = datos.groupby("Usuario")["Sentimiento"].mean().sort_values(ascending=False)
+    # Graficar el sentimiento promedio
+    st.subheader("Sentimiento promedio de los mensajes")
     plt.figure(figsize=(10, 6))
-    sns.barplot(x=sentimiento_promedio.index, y=sentimiento_promedio.values)
-    plt.xlabel("Usuario")
-    plt.ylabel("Sentimiento promedio")
+    sns.barplot(x=datos.index, y=datos["Sentimiento"])
+    plt.xlabel("Mensaje")
+    plt.ylabel("Sentimiento")
+    plt.xticks(rotation=45)
     st.pyplot()
 
     # Mostrar la cantidad total de mensajes
