@@ -5,8 +5,8 @@ import seaborn as sns
 from textblob import TextBlob
 
 # Cargar los datos de los registros de WhatsApp
-def cargar_datos():
-    datos = pd.read_csv("whatsapp_logs.csv")  # Reemplaza "whatsapp_logs.csv" con el nombre de tu archivo CSV
+def cargar_datos(archivo):
+    datos = pd.read_csv(archivo)
     return datos
 
 # Analizar los datos y generar visualizaciones
@@ -42,11 +42,15 @@ def main():
     st.title("Análisis de registros de WhatsApp")
     st.write("Esta aplicación analiza los registros de WhatsApp y presenta los resultados en forma gráfica.")
 
-    # Cargar los datos
-    datos = cargar_datos()
+    # Subir el archivo de registros de WhatsApp
+    archivo = st.file_uploader("Sube el archivo de registros de WhatsApp (CSV)", type="csv")
 
-    # Analizar los datos y generar visualizaciones
-    analizar_datos(datos)
+    if archivo is not None:
+        # Cargar los datos
+        datos = cargar_datos(archivo)
+
+        # Analizar los datos y generar visualizaciones
+        analizar_datos(datos)
 
 # Ejecutar la aplicación
 if __name__ == "__main__":
