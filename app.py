@@ -6,7 +6,7 @@ from textblob import TextBlob
 
 # Cargar los datos de los registros de WhatsApp
 def cargar_datos(archivo):
-    datos = pd.read_csv(archivo)
+    datos = pd.read_csv(archivo, sep="\t", header=None, names=["Fecha", "Hora", "Mensaje"])
     return datos
 
 # Analizar los datos y generar visualizaciones
@@ -43,7 +43,7 @@ def main():
     st.write("Esta aplicación analiza los registros de WhatsApp y presenta los resultados en forma gráfica.")
 
     # Subir el archivo de registros de WhatsApp
-    archivo = st.file_uploader("Sube el archivo de registros de WhatsApp (CSV)", type="csv")
+    archivo = st.file_uploader("Sube el archivo de registros de WhatsApp (_chat.txt)", type="txt")
 
     if archivo is not None:
         # Cargar los datos
